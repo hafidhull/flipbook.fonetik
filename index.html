@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description"
+    content="Flip Book Interaktif Belajar Membaca untuk siswa SD â€” Suku Kata & Kata Sederhana dengan audio" />
+  <title>Flip Book Belajar Membaca</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       RESET & BASE
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      height: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      height: 100%;
+      font-family: 'Nunito', ui-sans-serif, system-ui, -apple-system, sans-serif;
+      background: #c9f0ce;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       ANIMATED BACKGROUND
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 10%, rgba(255, 255, 255, .65), transparent 45%),
+        radial-gradient(ellipse at 85% 5%, rgba(255, 255, 255, .4), transparent 40%),
+        radial-gradient(ellipse at 50% 90%, rgba(46, 204, 113, .2), transparent 50%),
+        linear-gradient(170deg, #dff7df 0%, #c2edc8 40%, #a8e6b0 70%, #c9f0ce 100%);
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle 80px at 10% 20%, rgba(124, 58, 237, .06), transparent),
+        radial-gradient(circle 120px at 90% 80%, rgba(255, 183, 3, .08), transparent),
+        radial-gradient(circle 60px at 50% 50%, rgba(46, 204, 113, .05), transparent);
+      z-index: -1;
+      animation: bgShift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgShift {
+      0% {
+        opacity: .6;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       APP LAYOUT
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    .app {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 0;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 8px 12px;
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       HEADER / TOP BAR
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, .45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .6);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .06);
+      margin-bottom: 8px;
+    }
+
+    .title {
+      font-weight: 900;
+      font-size: clamp(13px, 2.8vw, 20px);
+      color: #12351b;
+      letter-spacing: .3px;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .title-icon {
+      font-size: 1.2em;
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       CONTROLS
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    .controls {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      border: none;
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: clamp(11px, 1.8vw, 14px);
+      padding: 8px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, .3);
+      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .btn:hover:not([disabled]) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(124, 58, 237, .4);
+    }
+
+    .btn:active:not([disabled]) {
+      transform: scale(.96) translateY(0);
+    }
+
+    .btn[disabled] {
+      opacity: .4;
+      cursor: not-allowed;
+      filter: grayscale(30%);
+      box-shadow: none;
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border-radius: 10px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 16px;
+    }
+
+    .btn-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .page-indicator {
+      font-weight: 900;
+      font-size: clamp(11px, 1.8vw, 13px);
+      color: #1a4a22;
+      background: rgba(255, 255, 255, .5);
+      padding: 6px 12px;
+      border-radius: 10px;
+      white-space: nowrap;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       BOOK CONTAINER
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    .book-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      perspective: 2000px;
+      padding: 4px;
+    }
+
+    .book {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      aspect-ratio: 3 / 4;
+      max-height: calc(100vh - 80px);
+      border-radius: 20px;
+      box-shadow:
+        0 22px 70px rgba(0, 0, 0, .15),
+        0 10px 30px rgba(0, 0, 0, .1),
+        inset 0 0 0 1px rgba(255, 255, 255, .3);
+      overflow: hidden;
+      background: #8fa;
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       PAGE LAYERS
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    .page {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    .page img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    .page-current {
+      z-index: 2;
+    }
+
+    .page-next {
+      z-index: 1;
+    }
+
+    /* Flip layer (for animation) */
+    .page-flip {
+      z-index: 10;
+      transform-origin: left center;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .page-flip.animating {
+      transition: transform 600ms cubic-bezier(.22, .9, .36, 1);
+    }
+
+    .page-flip.flipped {
+      transform: rotateY(-180deg);
+    }
+
+    /* Back-flip layer (for backward) */
+    .page-back {
+      z-index: 10;
+      transform-origin: right center;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: rotateY(180deg);
+    }
+
+    .page-back.animating {
+      transition: transform 600ms cubic-bezier(.22, .9, .36, 1);
+    }
+
+    .page-back.flipped {
+      transform: rotateY(0deg);
+    }
+
+    /* Shadow during flip */
+    .flip-shadow {
+      position: absolute;
+      inset: 0;
+      z-index: 11;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 200ms ease;
+    }
+
+    .flip-shadow.show {
+      opacity: 1;
+    }
+
+    .flip-shadow-forward {
+      background: linear-gradient(to right, rgba(0, 0, 0, .12) 0%, transparent 60%);
+    }
+
+    .flip-shadow-backward {
+      background: linear-gradient(to left, rgba(0, 0, 0, .12) 0%, transparent 60%);
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       AUDIO OVERLAY BUTTONS
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    .audio-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .audio-btn {
+      position: absolute;
+      pointer-events: all;
+      cursor: pointer;
+      border: 2px solid rgba(180, 130, 220, .0);
+      border-radius: 14px;
+      background: rgba(180, 130, 220, .0);
+      transition: background .2s ease, border-color .2s ease, transform .15s ease, box-shadow .2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .audio-btn::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 16px;
+      border: 2px solid rgba(180, 130, 220, .35);
+      animation: audioPulse 2.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes audioPulse {
+
+      0%,
+      100% {
+        opacity: .3;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .8;
+        transform: scale(1.04);
+      }
+    }
+
+    .audio-btn:hover {
+      background: rgba(180, 130, 220, .2);
+      border-color: rgba(180, 130, 220, .5);
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(124, 58, 237, .25);
+    }
+
+    .audio-btn:active {
+      transform: scale(.95);
+      background: rgba(124, 58, 237, .3);
+      border-color: rgba(124, 58, 237, .6);
+    }
+
+    .audio-btn.playing {
+      background: rgba(124, 58, 237, .25);
+      border-color: rgba(124, 58, 237, .6);
+      box-shadow: 0 0 24px rgba(124, 58, 237, .35);
+      animation: playBounce 600ms ease infinite;
+    }
+
+    .audio-btn.playing::after {
+      animation: none;
+      opacity: 0;
+    }
+
+    @keyframes playBounce {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      30% {
+        transform: scale(1.08);
+      }
+
+      60% {
+        transform: scale(1.02);
+      }
+    }
+
+    /* Ripple on click */
+    .audio-btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(124, 58, 237, .35);
+      transform: scale(0);
+      animation: rippleAnim 500ms ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes rippleAnim {
+      to {
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       BOTTOM BAR / PAGE DOTS
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    .bottombar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, .4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .5);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(26, 74, 34, .2);
+      border: none;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease, width .3s ease;
+      padding: 0;
+    }
+
+    .dot:hover {
+      background: rgba(26, 74, 34, .4);
+      transform: scale(1.2);
+    }
+
+    .dot.active {
+      background: #7c3aed;
+      width: 24px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, .3);
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       PAGE ENTRANCE ANIMATION
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    .page-enter {
+      animation: pageEnter 400ms ease-out;
+    }
+
+    @keyframes pageEnter {
+      from {
+        opacity: .6;
+        transform: scale(.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       FULLSCREEN STYLES
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    .app.fullscreen .topbar,
+    .app.fullscreen .bottombar {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      max-width: 600px;
+      width: calc(100% - 24px);
+    }
+
+    .app.fullscreen .topbar {
+      top: 8px;
+    }
+
+    .app.fullscreen .bottombar {
+      bottom: 8px;
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       RESPONSIVE
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    @media (max-width: 500px) {
+      .app {
+        padding: 4px 6px;
+      }
+
+      .topbar {
+        padding: 6px 10px;
+        border-radius: 12px;
+        margin-bottom: 4px;
+      }
+
+      .bottombar {
+        padding: 6px 10px;
+        border-radius: 12px;
+        margin-top: 4px;
+      }
+
+      .btn {
+        padding: 6px 10px;
+        border-radius: 10px;
+      }
+
+      .btn-icon {
+        width: 32px;
+        height: 32px;
+      }
+
+      .book {
+        border-radius: 14px;
+      }
+
+      .page {
+        border-radius: 14px;
+      }
+
+      .title {
+        font-size: 12px;
+      }
+
+      .dot {
+        width: 7px;
+        height: 7px;
+      }
+
+      .dot.active {
+        width: 18px;
+      }
+    }
+
+    @media (min-width: 768px) and (orientation: landscape) {
+      .book {
+        max-height: calc(100vh - 100px);
+        max-width: 800px;
+      }
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       REDUCED MOTION
+       â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    @media (prefers-reduced-motion: reduce) {
+
+      .page-flip.animating,
+      .page-back.animating {
+        transition: none;
+      }
+
+      .audio-btn::after {
+        animation: none;
+      }
+
+      .audio-btn.playing {
+        animation: none;
+      }
+
+      @keyframes bgShift {
+
+        0%,
+        100% {
+          opacity: .8;
+        }
+      }
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #dff7df, #c9f0ce);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity .4s ease;
+    }
+
+    .loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(124, 58, 237, .2);
+      border-top-color: #7c3aed;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <main class="app" id="app">
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="title"><span class="title-icon">ðŸ“˜</span> Flip Book Belajar Membaca</div>
+      <div class="controls">
+        <button class="btn btn-icon" id="btnPrev" type="button" aria-label="Halaman sebelumnya" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 45</div>
+        <button class="btn btn-icon" id="btnNext" type="button" aria-label="Halaman berikutnya">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+        <button class="btn btn-icon" id="btnFullscreen" type="button" aria-label="Layar penuh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9" />
+            <polyline points="9 21 3 21 3 15" />
+            <line x1="21" y1="3" x2="14" y2="10" />
+            <line x1="3" y1="21" x2="10" y2="14" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- BOOK -->
+    <section class="book-stage" id="bookStage">
+      <div class="book" id="book" role="application" aria-roledescription="flip book"
+        aria-label="Flip Book interaktif belajar membaca">
+        <!-- Pages injected by JS -->
+        <div class="page page-current" id="pageCurrent"></div>
+        <div class="page page-next" id="pageNext"></div>
+        <div class="flip-shadow" id="flipShadow"></div>
+      </div>
+    </section>
+
+    <!-- BOTTOM BAR -->
+    <nav class="bottombar" id="bottombar" aria-label="Navigasi halaman">
+      <!-- Dots injected by JS -->
+    </nav>
+  </main>
+
+  <script>
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• 
+    // PAGE DATA â€” 24 halaman dengan mapping audio
+    // â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• 
+    // Setiap tombol audio didefinisikan dengan posisi (%) relatif terhadap gambar
+    // x, y = center position (%), w, h = ukuran area klik (%)
+    const PAGES = [
+      { img: '1.png', audio: [] },
+      { img: '2.png', audio: [] },
+      { img: '3.png', audio: [] },
+      { img: '4.png', audio: [{ label: 'a i u e o', file: 'a i u e o.mp3', x: 45, y: 28, w: 14, h: 8 }] },
+      { img: '5.png', audio: [
+          { label: 'ba', file: 'ba.mp3', x: 46, y: 77, w: 24, h: 6 },
+          { label: 'ca', file: 'ca.mp3', x: 46, y: 84, w: 24, h: 6 },
+          { label: 'da', file: 'da.mp3', x: 46, y: 91, w: 24, h: 6 }
+        ] },
+      { img: '6.png', audio: [
+          { label: 'ba', file: 'ba.mp3', x: 46, y: 77, w: 24, h: 6 },
+          { label: 'ca', file: 'ca.mp3', x: 46, y: 84, w: 24, h: 6 },
+          { label: 'da', file: 'da.mp3', x: 46, y: 91, w: 24, h: 6 }
+        ] },
+      { img: '7.png', audio: [
+          { label: 'ca', file: 'ca.mp3', x: 46, y: 77, w: 24, h: 6 },
+          { label: 'da', file: 'da.mp3', x: 46, y: 84, w: 24, h: 6 },
+          { label: 'sa', file: 'sa.mp3', x: 46, y: 91, w: 24, h: 6 }
+        ] },
+      { img: '8.png', audio: [
+          { label: 'da', file: 'da.mp3', x: 46, y: 77, w: 24, h: 6 },
+          { label: 'sa', file: 'sa.mp3', x: 46, y: 84, w: 24, h: 6 },
+          { label: 'ma', file: 'ma.mp3', x: 46, y: 91, w: 24, h: 6 }
+        ] },
+      { img: '9.png', audio: [
+          { label: 'sa', file: 'sa.mp3', x: 46, y: 77, w: 24, h: 6 },
+          { label: 'ma', file: 'ma.mp3', x: 46, y: 84, w: 24, h: 6 },
+          { label: 'ya', file: 'ya.mp3', x: 46, y: 91, w: 24, h: 6 }
+        ] },
+      { img: '10.png', audio: [
+          { label: 'bi', file: 'bi.mp3', x: 36, y: 77, w: 20, h: 6 },
+          { label: 'ci', file: 'ci.mp3', x: 36, y: 84, w: 20, h: 6 },
+          { label: 'di', file: 'di.mp3', x: 36, y: 91, w: 20, h: 6 },
+          { label: 'si', file: 'si.mp3', x: 68, y: 77, w: 20, h: 6 },
+          { label: 'mi', file: 'mi.mp3', x: 68, y: 84, w: 20, h: 6 },
+          { label: 'yi', file: 'yi.mp3', x: 68, y: 91, w: 20, h: 6 }
+        ] },
+      { img: '11.png', audio: [] },
+      { img: '12.png', audio: [
+          { label: 'na', file: 'na.mp3', x: 46, y: 79, w: 24, h: 6 },
+          { label: 'ni', file: 'ni.mp3', x: 46, y: 86, w: 24, h: 6 },
+          { label: 'nu', file: 'nu.mp3', x: 46, y: 93, w: 24, h: 6 }
+        ] },
+      { img: '13.png', audio: [
+          { label: 'ka', file: 'ka.mp3', x: 46, y: 79, w: 24, h: 6 },
+          { label: 'ki', file: 'ki.mp3', x: 46, y: 86, w: 24, h: 6 },
+          { label: 'ku', file: 'ku.mp3', x: 46, y: 93, w: 24, h: 6 }
+        ] },
+      { img: '14.png', audio: [
+          { label: 'pa', file: 'pa.mp3', x: 46, y: 79, w: 24, h: 6 },
+          { label: 'pi', file: 'pi.mp3', x: 46, y: 86, w: 24, h: 6 },
+          { label: 'pu', file: 'pu.mp3', x: 46, y: 93, w: 24, h: 6 }
+        ] },
+      { img: '15.png', audio: [
+          { label: 'la', file: 'la.mp3', x: 46, y: 79, w: 24, h: 6 },
+          { label: 'li', file: 'li.mp3', x: 46, y: 86, w: 24, h: 6 },
+          { label: 'lu', file: 'lu.mp3', x: 46, y: 93, w: 24, h: 6 }
+        ] },
+      { img: '16.png', audio: [
+          { label: 'ta', file: 'ta.mp3', x: 46, y: 79, w: 24, h: 6 },
+          { label: 'ti', file: 'ti.mp3', x: 46, y: 86, w: 24, h: 6 },
+          { label: 'tu', file: 'tu.mp3', x: 46, y: 93, w: 24, h: 6 }
+        ] },
+      { img: '17.png', audio: [
+          { label: 'ra', file: 'ra.mp3', x: 46, y: 79, w: 24, h: 6 },
+          { label: 'ri', file: 'ri.mp3', x: 46, y: 86, w: 24, h: 6 },
+          { label: 'ru', file: 'ru.mp3', x: 46, y: 93, w: 24, h: 6 }
+        ] },
+      { img: '18.png', audio: [
+          { label: 'ra', file: 'ra.mp3', x: 46, y: 79, w: 24, h: 6 },
+          { label: 'ri', file: 'ri.mp3', x: 46, y: 86, w: 24, h: 6 },
+          { label: 'ru', file: 'ru.mp3', x: 46, y: 93, w: 24, h: 6 }
+        ] },
+      { img: '19.png', audio: [
+          { label: 'ra', file: 'ra.mp3', x: 46, y: 79, w: 24, h: 6 },
+          { label: 'ri', file: 'ri.mp3', x: 46, y: 86, w: 24, h: 6 },
+          { label: 'ru', file: 'ru.mp3', x: 46, y: 93, w: 24, h: 6 }
+        ] },
+      { img: '20.png', audio: [
+          { label: 'ha', file: 'ha.mp3', x: 46, y: 79, w: 24, h: 6 },
+          { label: 'hi', file: 'hi.mp3', x: 46, y: 86, w: 24, h: 6 },
+          { label: 'hu', file: 'hu.mp3', x: 46, y: 93, w: 24, h: 6 }
+        ] },
+      { img: '21.png', audio: [] },
+      { img: '22.png', audio: [] },
+      { img: '23.png', audio: [{ label: 'ba', file: 'ba.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '24.png', audio: [{ label: 'bi', file: 'bi.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '25.png', audio: [{ label: 'banu', file: 'bamu.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '26.png', audio: [{ label: 'buku', file: 'buku.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '27.png', audio: [{ label: 'batu', file: 'batu.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '28.png', audio: [{ label: 'baju', file: 'baju.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '29.png', audio: [{ label: 'bola', file: 'bola.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '30.png', audio: [{ label: 'guru', file: 'guru.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '31.png', audio: [{ label: 'ibu', file: 'ibu.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '32.png', audio: [{ label: 'ida', file: 'ida.mp3', x: 50, y: 84, w: 30, h: 10 }] },
+      { img: '33.png', audio: [
+          { label: 'sepeda', file: 'sepeda.mp3', x: 45, y: 68, w: 28, h: 10 },
+          { label: 'banu', file: 'bamu.mp3', x: 45, y: 85, w: 28, h: 10 }
+        ] },
+      { img: '34.png', audio: [
+          { label: 'sepeda', file: 'sepeda.mp3', x: 45, y: 68, w: 28, h: 10 },
+          { label: 'banu', file: 'bamu.mp3', x: 45, y: 85, w: 28, h: 10 }
+        ] },
+      { img: '35.png', audio: [
+          { label: 'roda', file: 'roda.mp3', x: 45, y: 68, w: 28, h: 10 },
+          { label: 'banu', file: 'bamu.mp3', x: 45, y: 85, w: 28, h: 10 }
+        ] },
+      { img: '36.png', audio: [
+          { label: 'roda', file: 'roda.mp3', x: 45, y: 65, w: 28, h: 10 },
+          { label: 'topi biru', file: 'topi biru.mp3', x: 45, y: 83, w: 28, h: 10 }
+        ] },
+      { img: '37.png', audio: [
+          { label: 'ibu', file: 'ibu.mp3', x: 45, y: 50, w: 28, h: 10 },
+          { label: 'guru', file: 'guru.mp3', x: 45, y: 68, w: 28, h: 10 },
+          { label: 'rumah', file: 'rumah.mp3', x: 45, y: 86, w: 28, h: 10 }
+        ] },
+      { img: '38.png', audio: [
+          { label: 'ibu', file: 'ibu.mp3', x: 45, y: 65, w: 28, h: 10 },
+          { label: 'guru', file: 'guru.mp3', x: 45, y: 83, w: 28, h: 10 }
+        ] },
+      { img: '39.png', audio: [
+          { label: 'ibu', file: 'ibu.mp3', x: 45, y: 65, w: 28, h: 10 },
+          { label: 'guru', file: 'guru.mp3', x: 45, y: 83, w: 28, h: 10 }
+        ] },
+      { img: '40.png', audio: [
+          { label: 'Pasangkanlah', file: 'Pasangkanlah.mp3', x: 42, y: 8, w: 16, h: 8 },
+          { label: 'roda', file: 'roda.mp3', x: 42, y: 24, w: 16, h: 8 },
+          { label: 'sepeda', file: 'sepeda.mp3', x: 42, y: 42, w: 16, h: 8 },
+          { label: 'sepatu', file: 'sepatu.mp3', x: 42, y: 60, w: 16, h: 8 },
+          { label: 'topi biru', file: 'topi biru.mp3', x: 42, y: 82, w: 16, h: 8 }
+        ] },
+      { img: '41.png', audio: [
+          { label: 'Pasangkanlah', file: 'Pasangkanlah.mp3', x: 42, y: 8, w: 16, h: 8 },
+          { label: 'baju', file: 'baju.mp3', x: 42, y: 22, w: 16, h: 8 },
+          { label: 'buku', file: 'buku.mp3', x: 42, y: 42, w: 16, h: 8 },
+          { label: 'sepatu', file: 'sepatu.mp3', x: 42, y: 60, w: 16, h: 8 },
+          { label: 'guru', file: 'guru.mp3', x: 42, y: 82, w: 16, h: 8 }
+        ] },
+      { img: '42.png', audio: [
+          { label: 'hore', file: 'hore kamu hebat yu bermain lagi besok.mp3', x: 50, y: 42, w: 16, h: 8 }
+        ] },
+      { img: '43.png', audio: [
+          { label: 'rapihkan', file: 'Rapihkan kembali mainan mu.mp3', x: 50, y: 42, w: 16, h: 8 }
+        ] },
+      { img: '44.png', audio: [
+          { label: 'simpanlah', file: 'Simpan lah di tempat semula.mp3', x: 52, y: 42, w: 16, h: 8 }
+        ] }
+    ];
+
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // AUDIO ENGINE
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    const audioEl = new Audio();
+    audioEl.preload = 'auto';
+    let currentPlayingBtn = null;
+
+    function stopAudio() {
+      try { audioEl.pause(); audioEl.currentTime = 0; } catch (e) { }
+      if (currentPlayingBtn) {
+        currentPlayingBtn.classList.remove('playing');
+        currentPlayingBtn = null;
+      }
+    }
+
+    function playAudio(btn, file) {
+      // Jangan izinkan suara dimainkan saat animasi flip berjalan
+      if (isAnimating) return;
+
+      stopAudio();
+      currentPlayingBtn = btn;
+      btn.classList.add('playing');
+
+      // Add ripple effect
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = '50%';
+      ripple.style.top = '50%';
+      ripple.style.marginLeft = -(size / 2) + 'px';
+      ripple.style.marginTop = -(size / 2) + 'px';
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 500);
+
+      audioEl.src = file;
+      audioEl.onended = () => {
+        if (currentPlayingBtn) currentPlayingBtn.classList.remove('playing');
+        currentPlayingBtn = null;
+      };
+      audioEl.onerror = () => {
+        if (currentPlayingBtn) currentPlayingBtn.classList.remove('playing');
+        currentPlayingBtn = null;
+      };
+      audioEl.play().catch(() => {
+        if (currentPlayingBtn) currentPlayingBtn.classList.remove('playing');
+        currentPlayingBtn = null;
+      });
+    }
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // DOM REFERENCES
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    const pageCurrent = document.getElementById('pageCurrent');
+    const pageNext = document.getElementById('pageNext');
+    const flipShadow = document.getElementById('flipShadow');
+    const book = document.getElementById('book');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnFullscreen = document.getElementById('btnFullscreen');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const bottombar = document.getElementById('bottombar');
+    const app = document.getElementById('app');
+
+    let currentPage = 0;
+    let isAnimating = false;
+    const TOTAL = PAGES.length;
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // RENDER PAGE
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    function renderPage(container, pageIndex, animate = false) {
+      const data = PAGES[pageIndex];
+      if (!data) return;
+
+      // Build HTML
+      let html = `<img src="${data.img}" alt="Halaman ${pageIndex + 1}" draggable="false" />`;
+
+      if (data.audio.length > 0) {
+        html += '<div class="audio-overlay">';
+        data.audio.forEach((a, i) => {
+          const left = a.x - a.w / 2;
+          const top = a.y - a.h / 2;
+          html += `<button class="audio-btn" 
+            data-file="${a.file}" 
+            data-label="${a.label}"
+            aria-label="Putar suara ${a.label}"
+            style="left:${left}%;top:${top}%;width:${a.w}%;height:${a.h}%"
+            id="audio-btn-${pageIndex}-${i}"></button>`;
+        });
+        html += '</div>';
+      }
+
+      container.innerHTML = html;
+      if (animate) container.classList.add('page-enter');
+
+      // Attach audio handlers
+      container.querySelectorAll('.audio-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          playAudio(btn, btn.dataset.file);
+        });
+        btn.addEventListener('touchend', (e) => {
+          // Prevent double-firing on mobile
+        });
+      });
+    }
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // NAVIGATION
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    function updateControls() {
+      btnPrev.disabled = currentPage <= 0;
+      btnNext.disabled = currentPage >= TOTAL - 1;
+      pageIndicator.textContent = `${currentPage + 1} / ${TOTAL}`;
+
+      // Update dots
+      document.querySelectorAll('.dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentPage);
+      });
+    }
+
+    function goToPage(index, direction = 'none') {
+      if (index < 0 || index >= TOTAL || index === currentPage || isAnimating) return;
+
+      stopAudio();
+      isAnimating = true;
+      const oldPage = currentPage;
+      currentPage = index;
+
+      if (direction === 'forward') {
+        flipForward(oldPage, index);
+      } else if (direction === 'backward') {
+        flipBackward(oldPage, index);
+      } else {
+        // Direct jump (from dot click)
+        pageCurrent.classList.remove('page-enter');
+        renderPage(pageCurrent, index, true);
+        updateControls();
+        isAnimating = false;
+      }
+    }
+
+    function flipForward(fromIdx, toIdx) {
+      // 1. Render the next page underneath
+      renderPage(pageNext, toIdx);
+
+      // 2. Create flip layer with current page content
+      const flipLayer = document.createElement('div');
+      flipLayer.className = 'page page-flip';
+      renderPage(flipLayer, fromIdx);
+      book.appendChild(flipLayer);
+
+      // 3. Show shadow
+      flipShadow.className = 'flip-shadow flip-shadow-forward show';
+
+      // 4. Trigger animation
+      requestAnimationFrame(() => {
+        flipLayer.classList.add('animating');
+        requestAnimationFrame(() => {
+          flipLayer.classList.add('flipped');
+        });
+      });
+
+      // 5. Cleanup after animation
+      setTimeout(() => {
+        renderPage(pageCurrent, toIdx, true);
+        flipLayer.remove();
+        flipShadow.className = 'flip-shadow';
+        updateControls();
+        isAnimating = false;
+      }, 650);
+    }
+
+    function flipBackward(fromIdx, toIdx) {
+      // 1. Render the previous page underneath
+      renderPage(pageNext, toIdx);
+
+      // 2. Create back-flip layer
+      const flipLayer = document.createElement('div');
+      flipLayer.className = 'page page-back';
+      renderPage(flipLayer, toIdx);
+      book.appendChild(flipLayer);
+
+      // 3. Show shadow
+      flipShadow.className = 'flip-shadow flip-shadow-backward show';
+
+      // 4. Trigger animation
+      requestAnimationFrame(() => {
+        flipLayer.classList.add('animating');
+        requestAnimationFrame(() => {
+          flipLayer.classList.add('flipped');
+        });
+      });
+
+      // 5. Cleanup
+      setTimeout(() => {
+        renderPage(pageCurrent, toIdx, true);
+        flipLayer.remove();
+        flipShadow.className = 'flip-shadow';
+        updateControls();
+        isAnimating = false;
+      }, 650);
+    }
+
+    function nextPage() {
+      goToPage(currentPage + 1, 'forward');
+    }
+
+    function prevPage() {
+      goToPage(currentPage - 1, 'backward');
+    }
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // PAGE DOTS
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    function buildDots() {
+      let html = '';
+      for (let i = 0; i < TOTAL; i++) {
+        html += `<button class="dot${i === 0 ? ' active' : ''}" data-page="${i}" aria-label="Ke halaman ${i + 1}"></button>`;
+      }
+      bottombar.innerHTML = html;
+      bottombar.querySelectorAll('.dot').forEach(dot => {
+        dot.addEventListener('click', () => {
+          const target = parseInt(dot.dataset.page);
+          if (target !== currentPage) {
+            goToPage(target, target > currentPage ? 'forward' : 'backward');
+          }
+        });
+      });
+    }
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // KEYBOARD NAVIGATION
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        nextPage();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        prevPage();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        goToPage(0, 'backward');
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        goToPage(TOTAL - 1, 'forward');
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      }
+    });
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // TOUCH / SWIPE
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    const bookStage = document.getElementById('bookStage');
+
+    bookStage.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
+      touchStartTime = Date.now();
+    }, { passive: true });
+
+    bookStage.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      const dt = Date.now() - touchStartTime;
+
+      // Only count as swipe if horizontal movement > 40px and more horizontal than vertical
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 500) {
+        if (dx < 0) nextPage();   // swipe left â†’ next
+        else prevPage();          // swipe right â†’ prev
+      }
+    }, { passive: true });
+
+    // Click on book edges for navigation
+    book.addEventListener('click', (e) => {
+      // Don't navigate if clicking an audio button
+      if (e.target.closest('.audio-btn')) return;
+
+      const rect = book.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const third = rect.width / 3;
+
+      if (x < third) prevPage();
+      else if (x > third * 2) nextPage();
+    });
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // BUTTON HANDLERS
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    btnNext.addEventListener('click', nextPage);
+    btnPrev.addEventListener('click', prevPage);
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // FULLSCREEN
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => { });
+      } else {
+        document.exitFullscreen().catch(() => { });
+      }
+    }
+    btnFullscreen.addEventListener('click', toggleFullscreen);
+
+    document.addEventListener('fullscreenchange', () => {
+      app.classList.toggle('fullscreen', !!document.fullscreenElement);
+    });
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // PRELOAD IMAGES
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    function preloadImages() {
+      return Promise.all(
+        PAGES.map(p => new Promise((resolve) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = resolve; // don't block on error
+          img.src = p.img;
+        }))
+      );
+    }
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // INITIALIZE
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    function init() {
+      buildDots();
+      renderPage(pageCurrent, 0, true);
+      updateControls();
+
+      // Hide loading after images preloaded (or timeout)
+      const loading = document.getElementById('loadingOverlay');
+      const hideLoading = () => {
+        loading.classList.add('hidden');
+        setTimeout(() => loading.remove(), 500);
+      };
+
+      preloadImages().then(hideLoading);
+      setTimeout(hideLoading, 3000); // fallback timeout
+    }
+
+    init();
+  </script>
+</body>
+
+</html>
